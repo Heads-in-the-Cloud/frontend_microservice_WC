@@ -33,7 +33,7 @@ def login():
     elif request.method == 'POST':
 
         if form.validate_on_submit():
-            response = requests.post(HOST_DOMAIN+'login', json=request.form.to_dict())
+            response = requests.post(HOST_DOMAIN+'/login', json=request.form.to_dict())
             return response.text
 
 
@@ -47,16 +47,22 @@ def register():
         logging.info(request.form.to_dict())
         json = request.form.to_dict()
         json['role_id'] = TRAVELER_ROLE
-        response = requests.post(HOST_DOMAIN+'user/add', json=json)
+        response = requests.post(HOST_DOMAIN+'/user/add', json=json)
         return response.json()
 
 
 @app.route('/lms/home', methods = ['GET'])
-def home():
-    logging.info(request.url_root)
-    url = request.url_root+'/airline/read/route'
-    response = requests.get(HOST_DOMAIN+'/airline/read/route')
-    return jsonify(routes= response.json())
+def home():    
+    flights = requests.get(HOST_DOMAIN+'/airline/read/flight').json()
+    return render_template('home.html', title='Home', flights=flights)
+
+
+@app.route('/lms/routes', methods = ['GET'])
+def routes():    
+    routes = requests.get(HOST_DOMAIN+'/airline/read/route').json()
+    logging.info(routes)
+    return render_template('routes.html', title='Routes', routes=routes)
+
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=os.getenv('FRONTEND_PORT'))
