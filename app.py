@@ -13,9 +13,15 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 TRAVELER_ROLE=os.getenv('TRAVELER_ROLE')
 HOST_DOMAIN=os.getenv('HOST_DOMAIN')
-# BASE_URL='http://localhost:5001/'
 
-@app.route('/login', methods = ['GET', 'POST'])
+
+@app.route('/health', methods = ['GET'])
+def health():
+    return 'health'
+
+
+
+@app.route('/lms/login', methods = ['GET', 'POST'])
 def login():
     form = LoginForm()
 
@@ -31,7 +37,7 @@ def login():
             return response.text
 
 
-@app.route('/register', methods = ['GET', 'POST'])
+@app.route('/lms/register', methods = ['GET', 'POST'])
 def register():
     form = RegistrationForm()
     if request.method == 'GET':
@@ -45,7 +51,7 @@ def register():
         return response.json()
 
 
-@app.route('/home', methods = ['GET'])
+@app.route('/lms/home', methods = ['GET'])
 def home():
     logging.info(request.url_root)
     url = request.url_root+'/airline/read/route'
