@@ -14,7 +14,9 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                image = docker.build image_label
+                script {
+                    image = docker.build image_label
+                }
             }
         }
         stage('push to registry') {
