@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms.fields.core import DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 
 
@@ -29,4 +30,18 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
 
+class BookingGuestForm(FlaskForm):
+    email = StringField('Email',
+                        validators=[DataRequired()])
+    phone = StringField('Phone', validators=[DataRequired()])
+    submit = SubmitField('Continue to Booking')
+
+class PassengerForm(FlaskForm):
+    given_name = StringField('Given Name',
+                        validators=[DataRequired()])
+    family_name = StringField('Family Name', validators=[DataRequired()])
+    dob = StringField('Date of Birth', validators=[DataRequired()])
+    gender = StringField('Gender', validators=[DataRequired()])
+    address = StringField('Address', validators=[DataRequired()])
+    submit = SubmitField('Book')
 

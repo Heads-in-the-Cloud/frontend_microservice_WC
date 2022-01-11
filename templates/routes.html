@@ -22,25 +22,26 @@
 {% for route in routes %}
 
 
+<div style="width: 100%; background-color: lightblue;"> 
 
-<div class="container" align="center" style="background-color: lightblue;">
+<div class="container" align="center">
     <div class="row" >
-      <div class="col" style="font-size: 40px; background-color: lightblue">
+      <div class="col" style="font-size: 40px;">
         {{route.origin_id}}
     </div>
-    <div class="col" style="font-size: 40px; background-color: lightblue">
+    <div class="col" style="font-size: 40px;">
         ➤
     </div>
     
-      <div class="col" style="font-size: 40px; background-color: lightblue">
+      <div class="col" style="font-size: 40px;">
         {{route.destination_id}}
     </div>
-    <div class="col" style="font-size: 35px; background-color: lightblue">
-        <button type="button" class="btn btn-primary" style="position: relative; bottom: 0px;"> Select </button>
-        
+    <div class="col" style="font-size: 35px;">
+      <button onclick="window.location.href='/lms/flights/{{route.id}}';" class="btn btn-primary"> Select </button>       
     </div>
     </div>
   </div>
+</div>
 
   <div class="container" align="center">
     <div class="row">

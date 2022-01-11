@@ -1,0 +1,130 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+
+<div class="content-section" >
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            
+            <legend class="border-bottom mb-4">Add Passengers</legend>
+            <div  id="passenger" >
+            <div class="form-group">
+                {{ form.given_name.label(class="form-control-label") }}
+                {% if form.given_name.errors %}
+                    {{ form.given_name(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.given_name.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.given_name(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.family_name.label(class="form-control-label") }}
+                {% if form.family_name.errors %}
+                    {{ form.family_name(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.family_name.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.family_name(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.dob.label(class="form-control-label") }}
+                {% if form.dob.errors %}
+                    {{ form.dob(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.dob.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.dob(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.gender.label(class="form-control-label") }}
+                {% if form.gender.errors %}
+                    {{ form.gender(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.gender.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.gender(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.address.label(class="form-control-label") }}
+                {% if form.address.errors %}
+                    {{ form.address(class="form-control form-control-lg is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.address.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.address(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+            <hr class="rounded" style="border-top: 8px solid lightblue; border-radius: 5px; margin-top: 30px;">
+        </div>
+        </fieldset>
+
+    <div style="display: flex;">
+        <div id="dynamic_form" style="margin-right: 30px;">
+            <button class="btn btn-outline-info" id="add_form_field">Add Passenger </button>
+        </div>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+            <input type="hidden" name="user_id" value={{user_id}}>
+            <input type="hidden" name="flight_id" value={{flight_id}}>
+        </div>
+    </div>
+
+
+    </form>
+
+</div>
+
+
+<script>
+$(document).ready(function() {
+    var max_fields = 10;
+    var wrapper = document.getElementById("passenger");
+    var add_button = document.getElementById("add_form_field");
+    var x = 1;
+    $(add_button).click(function(e) {
+
+        e.preventDefault();
+        if (x < max_fields) {
+            x++;
+            var new_passenger_div = document.createElement("div")
+            $(wrapper).append($(new_passenger_div))
+            $(new_passenger_div).append($("#passenger").clone().find("input").val("").end());
+            $(new_passenger_div).append('<a href="#" class="delete">Delete</a>'); 
+        } else {
+            alert('You Reached the limit')
+        }
+    });
+
+    $(wrapper).on("click", ".delete", function(e) {
+        e.preventDefault();
+        $(this).parent('div').remove();
+        x--;
+    })
+});
+
+</script>
+
+
+
+{% endblock content %}
