@@ -44,7 +44,7 @@ HOST_DOMAIN=os.getenv('HOST_DOMAIN')
 def health():
     return 'health'
 
-@app.route('/health_public', methods = ['GET'])
+@app.route('/lms/health', methods = ['GET'])
 def health_public():
     return 'health'
 
@@ -170,4 +170,4 @@ def add_passengers(user_id):
     return render_template('passengers.html', title='Passengers', form=form)
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=os.getenv('FRONTEND_PORT'))
+    app.run(host='0.0.0.0', port=os.getenv('FRONTEND_PORT'))
