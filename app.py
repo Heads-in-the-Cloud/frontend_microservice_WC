@@ -44,7 +44,9 @@ HOST_DOMAIN=os.getenv('HOST_DOMAIN')
 def health():
     return 'health'
 
-
+@app.route('/health_public', methods = ['GET'])
+def health_public():
+    return 'health'
 
 @app.route('/lms/login', methods = ['GET', 'POST'])
 def login():
