@@ -9,7 +9,7 @@
         <fieldset class="form-group">
             
             <legend class="border-bottom mb-4">Add Passengers</legend>
-            <div  id="passenger" >
+            <div id="passenger" >
             <div class="form-group">
                 {{ form.given_name.label(class="form-control-label") }}
                 {% if form.given_name.errors %}
@@ -79,6 +79,9 @@
         </div>
         </fieldset>
 
+    <div id="placeholder"> 
+
+    </div>
     <div style="display: flex;">
         <div id="dynamic_form" style="margin-right: 30px;">
             <button class="btn btn-outline-info" id="add_form_field">Add Passenger </button>
@@ -99,7 +102,7 @@
 <script>
 $(document).ready(function() {
     var max_fields = 10;
-    var wrapper = document.getElementById("passenger");
+    var wrapper = document.getElementById("placeholder");
     var add_button = document.getElementById("add_form_field");
     var x = 1;
     $(add_button).click(function(e) {
