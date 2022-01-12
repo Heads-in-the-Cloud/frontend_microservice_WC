@@ -165,6 +165,7 @@ def add_passengers(user_id):
                 booking = { 'passengers': passengers }
                 logging.info(booking)
                 response = requests.post(HOST_DOMAIN+'/booking/add/flight=' + str(request.cookies['flight_id']) + '/user=' + str(user_id), cookies=request.cookies, json=booking)
+                return response.status_code
                 return response.json()
 
     return render_template('passengers.html', title='Passengers', form=form)
