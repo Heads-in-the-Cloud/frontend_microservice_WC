@@ -134,8 +134,8 @@ def booking(flight_id):
         return render_template('booking.html', title='Booking', flight_id=flight_id, form=form)
 
     
-    response = redirect(url_for('add_passengers', user_id=user_id, flight_id=flight_id))
-    response.set_cookie('flilght_id', flight_id)
+    response = redirect(url_for('add_passengers', user_id=user_id))
+    response.set_cookie('flight_id', flight_id)
     return response
 
 @app.route('/lms/passengers/user=<user_id>', methods = ['GET', 'POST'])
