@@ -56,7 +56,9 @@ def login():
 
 @app.route('/lms/logout', methods = ['GET'])
 def logout():
-    return redirect(url_for('login'))
+    response = redirect(url_for('login'))
+    unset_jwt_cookies(response)
+    return response
 
 @app.route('/lms/register', methods = ['GET', 'POST'])
 def register():
@@ -65,7 +67,6 @@ def register():
         return render_template('register.html', title='Register', form=form)
     
     elif request.method == 'POST':
-        logging.info(request.form.to_dict())
         json = request.form.to_dict()
         json['role_id'] = TRAVELER_ROLE
         response = requests.post(HOST_DOMAIN+'/user/add', json=json)
