@@ -12,6 +12,15 @@ pipeline {
 
     agent any
     stages {
+
+        stage ('scan') {
+            steps {
+                withSonarQubeEnv('sonarqube-WC'){
+                sh "${scannerHome}/bin/sonar-scanner -D'sonar.projectKey=frontend-api'"
+                }
+            }
+        }
+
         stage('build') {
             steps {
                 script {
@@ -22,7 +31,7 @@ pipeline {
         stage('push to registry') {
             steps {
                 script {
-                    docker.withRegistry(repository, 'ecr:us-west-2:wc-ecr-access') {
+                    docker.withRegistry(repository, "ecr:${region}:wc-ecr-access") {
                         image.push('latest')
                     }        
                 }
@@ -42,13 +51,7 @@ pipeline {
             }
         }
 
-        stage ('scan') {
-            steps {
-                withSonarQubeEnv('sonarqube-WC'){
-                sh "${scannerHome}/bin/sonar-scanner -D'sonar.projectKey=frontend-api'"
-                }
-            }
-        }
+
    
     }
 
