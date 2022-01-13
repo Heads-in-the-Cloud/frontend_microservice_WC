@@ -4,7 +4,7 @@ from forms import *
 import logging, os, requests
 from dotenv import load_dotenv
 import traceback
-from flask_jwt_extended import get_jwt, JWTManager, create_access_token, get_jwt_identity, set_access_cookies
+from flask_jwt_extended import get_jwt, JWTManager, create_access_token, get_jwt_identity, set_access_cookies, unset_jwt_cookies
 from datetime import datetime, timezone, timedelta
 
 load_dotenv()
@@ -31,9 +31,6 @@ def health():
 def health_public():
     return 'health'
 
-@app.route('/lms/healths', methods = ['GET'])
-def health_publics():
-    return HOST_DOMAIN
 
 @app.route('/lms/login', methods = ['GET', 'POST'])
 def login():
@@ -57,7 +54,9 @@ def login():
         return response
     return render_template('login.html', title='Login', form=form)
 
-
+@app.route('/lms/logout', methods = ['GET'])
+def logout():
+    return redirect(url_for('login'))
 
 @app.route('/lms/register', methods = ['GET', 'POST'])
 def register():
