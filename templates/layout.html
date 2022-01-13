@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-
+    <script src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -33,7 +33,7 @@
       id="mainNav"
     >
       <div class="container">
-        <a class="navbar-brand" href="/">HOME</a>
+        <a class="navbar-brand" href="/lms/routes">HOME</a>
         <button
           class="
             navbar-toggler
@@ -58,16 +58,24 @@
             <li class="nav-item mx-0 mx-lg-1">
               
             </li>
+            
+            {% if logged_in %}
             <li class="nav-item mx-0 mx-lg-1">
-              <a class="nav-link py-3 px-0 px-lg-3 rounded" href="//localhost:5000/login"
-                >Login</a
-              >
+              <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/lms/logout">Logout</a>
             </li>
             <li class="nav-item mx-0 mx-lg-1">
-              <a class="nav-link py-3 px-0 px-lg-3 rounded" href="//localhost:5000/sign_up"
-                >Sign Up</a
-              >
+              <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/lms/account">My Account</a>
             </li>
+            {% else %}
+
+            <li class="nav-item mx-0 mx-lg-1">
+              <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/lms/login">Login</a>
+            </li>
+            <li class="nav-item mx-0 mx-lg-1">
+              <a class="nav-link py-3 px-0 px-lg-3 rounded" href="/lms/register">Sign Up</a>
+            </li>
+            {% endif %}
+
           </ul>
         </div>
       </div>

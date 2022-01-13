@@ -1,0 +1,62 @@
+
+
+{% extends "layout.html" %} {% block content %} 
+
+<div class="container" align="center">
+    <div class="row">
+        <div class="col" style="font-size: 40px;">
+          <h1> Origin </h1>
+      </div>
+      <div class="col" style="font-size: 40px;">   
+      </div>
+      
+        <div class="col" style="font-size: 40px;">
+        <h1> Destination </h1>
+      </div>
+      <div class="col" style="font-size: 40px;">   
+      </div>
+      </div>
+
+</div>
+
+{% for route in routes %}
+
+
+<div style="width: 100%; background-color: lightblue;"> 
+
+<div class="container" align="center">
+    <div class="row" >
+      <div class="col" style="font-size: 40px;">
+        {{route.origin_id}}
+    </div>
+    <div class="col" style="font-size: 40px;">
+        ➤
+    </div>
+    
+      <div class="col" style="font-size: 40px;">
+        {{route.destination_id}}
+    </div>
+    <div class="col" style="font-size: 35px;">
+      <button onclick="window.location.href='/lms/flights/{{route.id}}';" class="btn btn-primary"> Select </button>       
+    </div>
+    </div>
+  </div>
+</div>
+
+  <div class="container" align="center">
+    <div class="row">
+      <div class="col">
+        {{route.origin_airport.city}}
+    </div>
+    <div class="col" style="font-size: 40px;">
+    </div>
+      <div class="col">
+        {{route.destination_airport.city}}
+    </div>
+    <div class="col" style="font-size: 40px;">
+    </div>
+    </div>
+  </div>
+
+
+{% endfor %} {% endblock content %}
