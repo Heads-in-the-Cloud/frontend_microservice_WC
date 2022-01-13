@@ -29,7 +29,7 @@ def health():
 
 @app.route('/lms/health', methods = ['GET'])
 def health_public():
-    return 'health'
+    return 'healthy'
 
 
 @app.route('/lms/login', methods = ['GET', 'POST'])
