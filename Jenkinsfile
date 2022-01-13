@@ -40,8 +40,19 @@ pipeline {
                 sh 'aws ecs register-task-definition --cli-input-json file://task-def.json'
                 sh 'aws ecs update-service --cluster utopia-cluster-WC --service frontend-service-WC --task-definition frontend-task-WC'
             }
-        }   
+        }
+
+        stage ('scan') {
+            steps {
+                withSonarQubeEnv('sonarqube-WC'){
+                sh "${scannerHome}/bin/sonar-scanner -D'sonar.projectKey=frontend-api'"
+                }
+            }
+        }
+   
     }
+
+    
 
 
 
