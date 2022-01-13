@@ -23,23 +23,6 @@ TRAVELER_ROLE=os.getenv('TRAVELER_ROLE')
 HOST_DOMAIN=os.getenv('HOST_DOMAIN')
 
 
-# @app.after_request
-# def refresh_expiring_jwts(response):
-
-#     try:
-#         exp_timestamp = get_jwt()["exp"]
-#         now = datetime.now(timezone.utc)
-#         target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
-#         if target_timestamp > exp_timestamp:
-#             access_token = create_access_token(identity=get_jwt_identity())
-#             set_access_cookies(response, access_token)
-#         return response
-#     except (RuntimeError, KeyError):
-
-#         # Case where there is not a valid JWT. Just return the original respone
-#         return response
-
-
 @app.route('/health', methods = ['GET'])
 def health():
     return 'health'
@@ -47,6 +30,10 @@ def health():
 @app.route('/lms/health', methods = ['GET'])
 def health_public():
     return 'health'
+
+@app.route('/lms/healths', methods = ['GET'])
+def health_publics():
+    return HOST_DOMAIN
 
 @app.route('/lms/login', methods = ['GET', 'POST'])
 def login():
@@ -59,7 +46,6 @@ def login():
     #facilitate a login action if the request is of POST
     if form.validate_on_submit():
         response = requests.post(HOST_DOMAIN+'/login', json=request.form.to_dict())
-        logging.info(response.status_code)
         if response.status_code == 401:
             flash('Invalid credentials!', 'danger')
             return render_template('login.html', title='Login', form=form)
@@ -90,19 +76,19 @@ def register():
 @app.route('/lms/home', methods = ['GET'])
 def home():    
     flights = requests.get(HOST_DOMAIN+'/airline/read/flight', cookies=request.cookies).json()
-    return render_template('home.html', title='Home', flights=flights)
+    return render_template('home.html', title='Home', flights=flights, logged_in=verify_jwt_in_request(optional=True))
 
 
 @app.route('/lms/routes', methods = ['GET'])
 def routes():    
     routes = requests.get(HOST_DOMAIN+'/airline/read/route', cookies=request.cookies).json()
-    return render_template('routes.html', title='Routes', routes=routes)
+    return render_template('routes.html', title='Routes', routes=routes, logged_in=verify_jwt_in_request(optional=True))
 
 
 @app.route('/lms/flights', methods = ['GET'])
 def flights_all():    
     routes = requests.get(HOST_DOMAIN+'/airline/read/route_with_flights', cookies=request.cookies).json()
-    return render_template('flights.html', title='Flights', routes=routes)
+    return render_template('flights.html', title='Flights', routes=routes, logged_in=verify_jwt_in_request(optional=True))
 
 
 @app.route('/lms/flights/<id>', methods = ['GET'])
@@ -111,7 +97,7 @@ def flights_by_route(id):
     routes = response.json()
     if response.status_code == 404 or len(routes['flights']) == 0:
         return render_template('404.html', title='NotFound')
-    return render_template('flights.html', title='Flights', routes=[routes])
+    return render_template('flights.html', title='Flights', routes=[routes], logged_in=verify_jwt_in_request(optional=True))
 
 
 @app.route('/lms/booking/flight_id=<flight_id>', methods = ['GET', 'POST'])
@@ -131,10 +117,10 @@ def booking(flight_id):
     except:
 
         form = BookingGuestForm()
-        return render_template('booking.html', title='Booking', flight_id=flight_id, form=form)
+        return render_template('booking.html', title='Booking', flight_id=flight_id, form=form, logged_in=False)
 
     
-    response = redirect(url_for('add_passengers', user_id=user_id))
+    response = redirect(url_for('add_passengers', user_id=user_id, logged_in=True))
     response.set_cookie('flight_id', flight_id)
     return response
 
@@ -166,7 +152,7 @@ def add_passengers(user_id):
                 response = requests.post(HOST_DOMAIN+'/booking/add/flight=' + str(request.cookies['flight_id']) + '/user=' + str(user_id), cookies=request.cookies, json=booking)
                 return response.json()
 
-    return render_template('passengers.html', title='Passengers', form=form)
+    return render_template('passengers.html', title='Passengers', form=form, logged_in=verify_jwt_in_request(optional=True))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=os.getenv('FRONTEND_PORT'))
