@@ -38,6 +38,11 @@ pipeline {
             }
         }
         stage ('update') {
+            when {
+                expression { 
+                return params.cluster == 'terraform'
+                }
+            }
             steps {
                 sh '(aws ecs describe-task-definition --task-definition frontend-task-WC) | jq ".taskDefinition | \
                 {containerDefinitions:.containerDefinitions,        \
@@ -51,13 +56,16 @@ pipeline {
             }
         }
 
-
-   
+        stage ('update EKS'){
+            when {
+                expression { 
+                return params.cluster == 'eks'
+                }
+            }
+            steps {
+                sh "aws eks --region ${region} update-kubeconfig --name ${CLUSTER_NAME_WC}"
+                sh 'kubectl rollout restart deployment/frontend-deployment'
+            }
+        }
     }
-
-    
-
-
-
-
 }
