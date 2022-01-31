@@ -9,6 +9,7 @@ pipeline {
         repository = "${FRONTEND_REPO_WC}"
         latest = "${FRONTEND_REPO_WC}:latest"
         scannerHome = tool "${SonarQubeScanner}";
+        built = false
 
     }
 
@@ -43,6 +44,13 @@ pipeline {
             steps {
                 script {
                     image = docker.build image_label
+                }
+            }
+            post {
+                success {
+                    script {
+                        built = true
+                    }
                 }
             }
         }
