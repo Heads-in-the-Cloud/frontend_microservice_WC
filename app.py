@@ -76,9 +76,9 @@ def register():
 
 @app.route('/lms/home', methods = ['GET'])
 def home():    
-    flights = requests.get(HOST_DOMAIN+'/airline/read/flight', cookies=request.cookies).json()
-    logging.info(flights)
-    return render_template('home.html', title='Home', flights=flights, logged_in=verify_jwt_in_request(optional=True))
+    routes = requests.get(HOST_DOMAIN+'/airline/read/route_with_flights', cookies=request.cookies).json()
+    logging.info(routes)
+    return render_template('home.html', title='Home', routes=routes, logged_in=verify_jwt_in_request(optional=True))
 
 
 @app.route('/lms/routes', methods = ['GET'])
