@@ -63,8 +63,8 @@ pipeline {
             }
             steps {
                 script {
-                    cluster_name=sh ( script: "aws ecs list-clusters  | grep ${CF_STACK_WC}", returnStdout: true).trim()
-                    service_name=sh ( script: "aws ecs list-services --cluster ${cluster_name} | grep ${service_name}", returnStdout: true).trim()
+                    cluster_name=sh ( script: "aws ecs list-clusters  | grep ${CF_STACK_WC}", returnStdout: true).trim().replaceAll(",", "")
+                    service_name=sh ( script: "aws ecs list-services --cluster ${cluster_name} | grep ${service_name}", returnStdout: true).trim().replaceAll(",", "")
                     sh "(aws ecs describe-task-definition --task-definition ${task_def_name}) | jq '.taskDefinition | \
                     {containerDefinitions:.containerDefinitions,        \
                     family:.family,                                     \
