@@ -1,6 +1,8 @@
 pipeline {
 
     environment {
+        service_name = "FrontendService"
+        task_def_name = "frontend-task-WC"
         image_label = "wc-frontend"
         git_commit_hash ="${sh(returnStdout: true, script: 'git rev-parse HEAD')}"
         image = ""
@@ -12,6 +14,22 @@ pipeline {
 
     agent any
     stages {
+
+        stage('Setup parameters') {
+                    steps {
+                        script { 
+                            properties([
+                                parameters([
+                                    choice(
+                                        choices: ['eks', 'cf'], 
+                                        name: 'cluster'
+                                    )
+                                ])
+                            ])
+                        }
+                    }
+                }
+
 
         stage ('scan') {
             steps {
@@ -37,26 +55,30 @@ pipeline {
                 }
             }
         }
-        stage ('update') {
+        stage ('Update CloudFormation') {
             when {
                 expression { 
-                return params.cluster == 'terraform'
+                return params.cluster == 'cf'
                 }
             }
             steps {
-                sh '(aws ecs describe-task-definition --task-definition frontend-task-WC) | jq ".taskDefinition | \
-                {containerDefinitions:.containerDefinitions,        \
-                family:.family,                                     \
-                executionRoleArn:.executionRoleArn,                 \
-                requiresCompatibilities:.requiresCompatibilities,   \
-                cpu:.cpu, memory:.memory,                           \
-                networkMode:.networkMode}" > task-def.json'     
-                sh 'aws ecs register-task-definition --cli-input-json file://task-def.json'
-                sh 'aws ecs update-service --cluster utopia-cluster-WC --service frontend-service-WC --task-definition frontend-task-WC'
+                script {
+                    cluster_name=sh ( script: "aws ecs list-clusters  | grep ${CF_STACK_WC}", returnStdout: true).trim()
+                    service_name=sh ( script: "aws ecs list-services --cluster ${cluster_name} | grep ${service_name}", returnStdout: true).trim()
+                    sh "(aws ecs describe-task-definition --task-definition ${task_def_name}) | jq '.taskDefinition | \
+                    {containerDefinitions:.containerDefinitions,        \
+                    family:.family,                                     \
+                    executionRoleArn:.executionRoleArn,                 \
+                    requiresCompatibilities:.requiresCompatibilities,   \
+                    cpu:.cpu, memory:.memory,                           \
+                    networkMode:.networkMode}' > task-def.json"
+                    sh 'aws ecs register-task-definition --cli-input-json file://task-def.json'
+                    sh "aws ecs update-service --cluster ${cluster_name} --service ${service_name} --task-definition ${task_def_name}"
+                }
             }
-        }
+        } 
 
-        stage ('update EKS'){
+        stage ('update Elastic Kubernetes Service'){
             when {
                 expression { 
                 return params.cluster == 'eks'
@@ -65,6 +87,15 @@ pipeline {
             steps {
                 sh "aws eks --region ${region} update-kubeconfig --name ${CLUSTER_NAME_WC}"
                 sh 'kubectl rollout restart deployment/frontend-deployment'
+            }
+        }
+    }
+    post {
+        cleanup {
+            script {
+                if(built) {
+                    sh "docker rmi $image_label"
+                }
             }
         }
     }

@@ -29,7 +29,7 @@ def health():
 
 @app.route('/lms/health', methods = ['GET'])
 def health_public():
-    return 'healthy'
+    return 'changed'
 
 
 @app.route('/lms/login', methods = ['GET', 'POST'])
@@ -43,6 +43,7 @@ def login():
     #facilitate a login action if the request is of POST
     if form.validate_on_submit():
         response = requests.post(HOST_DOMAIN+'/login', json=request.form.to_dict())
+        logging.info(response)
         if response.status_code == 401:
             flash('Invalid credentials!', 'danger')
             return render_template('login.html', title='Login', form=form)
@@ -76,6 +77,7 @@ def register():
 @app.route('/lms/home', methods = ['GET'])
 def home():    
     flights = requests.get(HOST_DOMAIN+'/airline/read/flight', cookies=request.cookies).json()
+    logging.info(flights)
     return render_template('home.html', title='Home', flights=flights, logged_in=verify_jwt_in_request(optional=True))
 
 
