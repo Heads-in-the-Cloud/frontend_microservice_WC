@@ -29,7 +29,7 @@ def health():
 
 @app.route('/lms/health', methods = ['GET'])
 def health_public():
-    return 'frontend'
+    return 'health'
 
 
 @app.route('/lms/login', methods = ['GET', 'POST'])
