@@ -3,10 +3,10 @@ pipeline {
     environment {
         service_name = "FrontendService"
         task_def_name = "frontend-task-WC"
-        image_label = "wc-frontend"
+        image_label = "${FRONTEND_REPO_WC}"
         git_commit_hash ="${sh(returnStdout: true, script: 'git rev-parse HEAD')}"
         image = ""
-        repository = "${FRONTEND_REPO_WC}"
+        repository = "http://${ORG_ACCOUNT_NUM}.dkr.ecr.us-west-2.amazonaws.com/${image_label}"
         latest = "${FRONTEND_REPO_WC}:latest"
         scannerHome = tool "${SonarQubeScanner}";
         built = false
@@ -22,7 +22,7 @@ pipeline {
                             properties([
                                 parameters([
                                     choice(
-                                        choices: ['eks', 'cf'], 
+                                        choices: ['eks', 'cf', 'ecs-cli'], 
                                         name: 'cluster'
                                     )
                                 ])
@@ -61,6 +61,19 @@ pipeline {
                         image.push('latest')
                     }        
                 }
+            }
+        }
+        stage("Update ECS via ecs-cli"){
+            when {
+                expression { 
+                return params.cluster == 'ecs-cli'
+                }
+            }
+            steps {
+                build job: 'ECS Docker Compose Pipeline', parameters: [
+                string(name: 'action', value: 'update'),
+                string(name: 'container', value: 'frontend')
+                ]
             }
         }
         stage ('Update CloudFormation') {
