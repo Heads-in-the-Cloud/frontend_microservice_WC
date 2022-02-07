@@ -156,5 +156,11 @@ def add_passengers(user_id):
 
     return render_template('passengers.html', title='Passengers', form=form, logged_in=verify_jwt_in_request(optional=True))
 
+
+@app.errorhandler(Exception)
+def server_error(e):
+    return render_template('404.html', title='NotFound')
+
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=os.getenv('FRONTEND_PORT'))
+    app.run(debug=True, host='0.0.0.0', port=os.getenv('FRONTEND_PORT'))
