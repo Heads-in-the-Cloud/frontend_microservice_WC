@@ -74,13 +74,13 @@ def register():
         return response.json()
 
 
+# @app.route('/lms/home', methods = ['GET'])
+# def home():    
+#     routes = requests.get(HOST_DOMAIN+'/airline/read/route_with_flights', cookies=request.cookies).json()
+#     logging.info(routes)
+#     return render_template('routes.html', title='Home', routes=routes, logged_in=verify_jwt_in_request(optional=True))
+
 @app.route('/lms/home', methods = ['GET'])
-def home():    
-    routes = requests.get(HOST_DOMAIN+'/airline/read/route_with_flights', cookies=request.cookies).json()
-    logging.info(routes)
-    return render_template('home.html', title='Home', routes=routes, logged_in=verify_jwt_in_request(optional=True))
-
-
 @app.route('/lms/routes', methods = ['GET'])
 def routes():    
     routes = requests.get(HOST_DOMAIN+'/airline/read/route', cookies=request.cookies).json()
