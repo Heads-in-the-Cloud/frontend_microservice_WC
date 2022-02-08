@@ -45,3 +45,14 @@ class PassengerForm(FlaskForm):
     address = StringField('Address', validators=[DataRequired()])
     submit = SubmitField('Book')
 
+class UpdateUserForm(FlaskForm):
+    username = StringField('Username')  
+    given_name = StringField('Given Name')  
+    family_name = StringField('Family Name')  
+    email = StringField('Email')  
+    password = StringField('Password')  
+    phone = StringField('Phone')
+    submit = SubmitField('Confirm')
+
+
+

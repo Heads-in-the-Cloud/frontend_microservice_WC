@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h1> Account Settings ⚙️ </h1>
+<hr></hr>
+<form method="POST" action="">
+<div class="form-group">
+
+<div style="margin-left: 5px;" class="form-group row">
+    <p style="margin-bottom: 0%; margin-right: 10px;"> {{ user.username }} </p>
+    <button type="button" id="formButton" style="margin-bottom: 0%; margin-right: 10px;">
+        change username
+    </button>
+    <div class="col-xs-2" style="display: none; height: 20px;" id="username" >
+      <input class="form-control input-sm" type="text" name="username">
+    </div>
+</div>
+<div style="margin-left: 5px" class="form-group row">
+    <p style="margin-bottom: 0%; margin-right: 10px;"> {{ user.given_name }} </p>
+    <button type="button" style="margin-bottom: 0%; margin-right: 10px;" id="formButton-given-name">
+        change given name
+    </button>
+    <div class="col-xs-2" style="display: none; height: 20px;" id="given-name">
+      <input class="form-control input-sm" type="text" name="given_name">
+    </div>
+</div>
+<div style="margin-left: 5px" class="form-group row">
+    <p style="margin-bottom: 0%; margin-right: 10px;"> {{ user.family_name }} </p>
+    <button type="button" id="formButton-family-name" style="margin-bottom: 0%; margin-right: 10px;">
+        change family name
+    </button>
+    <div class="col-xs-2" style="display: none; height: 20px;" id="family-name">
+      <input class="form-control input-sm" type="text" name="family_name">
+    </div>
+</div>
+<div style="margin-left: 5px" class="form-group row">
+    <p style="margin-bottom: 0%; margin-right: 10px;"> {{ user.email }} </p>
+    <button type="button" id="formButton-email" style="margin-bottom: 0%; margin-right: 10px;">
+        change email
+    </button>
+    <div class="col-xs-2" style="display: none; height: 20px;" id="email">
+      <input class="form-control input-sm" type="text" name="email">
+    </div>
+</div>
+<div style="margin-left: 5px" class="form-group row">
+    <p style="margin-bottom: 0%; margin-right: 10px;"> {{ user.phone }} </p>
+    <button type="button" id="formButton-phone" style="margin-bottom: 0%; margin-right: 10px;">
+        change phone
+    </button>
+    <div class="col-xs-2" style="display: none; height: 20px;" id="phone">
+      <input class="form-control input-sm" type="text" name="phone">
+    </div>
+</div>
+<div style="margin-left: 5px" class="form-group row">
+    <p style="margin-bottom: 0%; margin-right: 10px;"> *PASSWORD* </p>
+    <button type="button" id="formButton-password" style="margin-bottom: 0%; margin-right: 10px;">
+        change password
+    </button>
+    <div class="col-xs-2" style="display: none; height: 20px;" id="password">
+      <input class="form-control input-sm" type="text" name="password">
+    </div>
+</div>
+    {{ form.submit(class="btn btn-outline-info") }}
+    <input type="hidden" name="user" value={{user}}>
+
+</div>
+</form>
+
+<script>
+$(document).ready(function() {
+  $("#formButton").click(function() {
+    $("#username").toggle();
+  });
+});
+$(document).ready(function() {
+  $("#formButton-given-name").click(function() {
+    $("#given-name").toggle();
+  });
+});
+$(document).ready(function() {
+  $("#formButton-family-name").click(function() {
+    $("#family-name").toggle();
+  });
+});
+$(document).ready(function() {
+  $("#formButton-email").click(function() {
+    $("#email").toggle();
+  });
+});
+$(document).ready(function() {
+  $("#formButton-phone").click(function() {
+    $("#phone").toggle();
+  });
+});
+$(document).ready(function() {
+  $("#formButton-password").click(function() {
+    $("#password").toggle();
+  });
+});
+</script>
+
+{% endblock content %}

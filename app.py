@@ -74,11 +74,6 @@ def register():
         return response.json()
 
 
-# @app.route('/lms/home', methods = ['GET'])
-# def home():    
-#     routes = requests.get(HOST_DOMAIN+'/airline/read/route_with_flights', cookies=request.cookies).json()
-#     logging.info(routes)
-#     return render_template('routes.html', title='Home', routes=routes, logged_in=verify_jwt_in_request(optional=True))
 
 @app.route('/lms/home', methods = ['GET'])
 @app.route('/lms/routes', methods = ['GET'])
@@ -150,12 +145,39 @@ def add_passengers(user_id):
                 return response.json()
             else:
                 booking = { 'passengers': passengers }
-                logging.info(booking)
                 response = requests.post(HOST_DOMAIN+'/booking/add/flight=' + str(request.cookies['flight_id']) + '/user=' + str(user_id), cookies=request.cookies, json=booking)
                 return response.json()
 
     return render_template('passengers.html', title='Passengers', form=form, logged_in=verify_jwt_in_request(optional=True))
 
+
+@app.route('/lms/account', methods = ['GET', 'POST'])
+def account():
+
+    verify_jwt_in_request()
+    user_id = get_jwt_identity()
+    response = requests.get(HOST_DOMAIN+'/user/read/id=' + str(user_id), cookies=request.cookies)
+    user = response.json()
+    if request.method == 'GET':
+        form = UpdateUserForm()
+        return render_template('account.html', user=user, form=form)
+    else:
+        if request.form['username'] != '':
+            user['username'] = request.form['username']
+        if request.form['given_name'] != '':
+            user['given_name'] = request.form['given_name']
+        if request.form['family_name'] != '':
+            user['family_name'] = request.form['family_name']
+        if request.form['email'] != '':
+            user['email'] = request.form['email']
+        if request.form['phone'] != '':
+            user['phone'] = request.form['phone']
+        if request.form['password'] != '':
+            user['password'] = request.form['password']
+        else:
+            user.pop('password')
+        response = requests.put(HOST_DOMAIN+'/user/update', cookies=request.cookies, json=user)
+        return response.json()
 
 @app.errorhandler(Exception)
 def server_error(e):
