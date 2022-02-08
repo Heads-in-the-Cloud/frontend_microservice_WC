@@ -79,7 +79,7 @@ def register():
 @app.route('/lms/routes', methods = ['GET'])
 def routes():    
     routes = requests.get(HOST_DOMAIN+'/airline/read/route', cookies=request.cookies).json()
-    return render_template('routes.html', title='Routes', routes=routes, logged_in=verify_jwt_in_request(optional=True))
+    return render_template('routes.html', title='Routes', routes=routes, logged_in=verify_jwt_in_request(optional=True, fresh=False))
 
 
 @app.route('/lms/flights', methods = ['GET'])
@@ -160,7 +160,7 @@ def account():
     user = response.json()
     if request.method == 'GET':
         form = UpdateUserForm()
-        return render_template('account.html', user=user, form=form)
+        return render_template('account.html', user=user, form=form, logged_in=verify_jwt_in_request(optional=True))
     else:
         if request.form['username'] != '':
             user['username'] = request.form['username']
