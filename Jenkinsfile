@@ -32,13 +32,13 @@ pipeline {
                 }
 
 
-        // stage ('scan') {
-        //     steps {
-        //         withSonarQubeEnv('sonarqube-WC'){
-        //         sh "${scannerHome}/bin/sonar-scanner -D'sonar.projectKey=frontend-api'"
-        //         }
-        //     }
-        // }
+        stage ('scan') {
+            steps {
+                withSonarQubeEnv('sonarqube-WC'){
+                sh "${scannerHome}/bin/sonar-scanner -D'sonar.projectKey=WC-frontend-microservice'"
+                }
+            }
+        }
 
         stage('build') {
             steps {
