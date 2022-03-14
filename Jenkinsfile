@@ -63,6 +63,20 @@ pipeline {
                 }
             }
         }
+        stage('Update EKS via Ansible Tower'){
+            steps{
+                script {
+                    results=ansibleTower(
+                        towerServer: 'Tower 1',
+                        jobTemplate: "EKS-update-frontend-$environment",
+                        extraVars: '''
+                        CLUSTER_NAME: "$CLUSTER_NAME_WC"
+                        REGION: "$region"
+                        ''',
+                        verbose: true)
+                }
+            }
+        }
         stage("Update ECS via ecs-cli"){
             when {
                 expression { 
