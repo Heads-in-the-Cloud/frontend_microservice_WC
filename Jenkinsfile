@@ -75,50 +75,11 @@ pipeline {
             }
         }
         stage("Update ECS via ecs-cli"){
-            when {
-                expression { 
-                return params.cluster == 'ecs-cli'
-                }
-            }
             steps {
-                build job: 'ECS Docker Compose Pipeline', parameters: [
+                build job: 'ECS Docker Compose Pipeline Up', parameters: [
                 string(name: 'action', value: 'update'),
                 string(name: 'container', value: 'frontend')
                 ]
-            }
-        }
-        stage ('Update CloudFormation') {
-            when {
-                expression { 
-                return params.cluster == 'cf'
-                }
-            }
-            steps {
-                script {
-                    cluster_name=sh ( script: "aws ecs list-clusters  | grep ${CF_STACK_WC}", returnStdout: true).trim().replaceAll(",", "")
-                    service_name=sh ( script: "aws ecs list-services --cluster ${cluster_name} | grep ${service_name}", returnStdout: true).trim().replaceAll(",", "")
-                    sh "(aws ecs describe-task-definition --task-definition ${task_def_name}) | jq '.taskDefinition | \
-                    {containerDefinitions:.containerDefinitions,        \
-                    family:.family,                                     \
-                    executionRoleArn:.executionRoleArn,                 \
-                    requiresCompatibilities:.requiresCompatibilities,   \
-                    cpu:.cpu, memory:.memory,                           \
-                    networkMode:.networkMode}' > task-def.json"
-                    sh 'aws ecs register-task-definition --cli-input-json file://task-def.json'
-                    sh "aws ecs update-service --cluster ${cluster_name} --service ${service_name} --task-definition ${task_def_name}"
-                }
-            }
-        } 
-
-        stage ('update Elastic Kubernetes Service'){
-            when {
-                expression { 
-                return params.cluster == 'eks'
-                }
-            }
-            steps {
-                sh "aws eks --region ${region} update-kubeconfig --name ${CLUSTER_NAME_WC}"
-                sh 'kubectl rollout restart deployment/frontend-deployment'
             }
         }
     }
