@@ -51,7 +51,7 @@ pipeline {
         }
         stage('Update EKS via Ansible Tower'){
             options {
-                timeout(time: 100, unit: 'SECONDS') 
+                timeout(time: 60, unit: 'SECONDS') 
             }
             steps{
                 catchError(buildResult: 'SUCCESS', stageResult: 'ABORTED') { 
