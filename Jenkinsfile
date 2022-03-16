@@ -18,22 +18,6 @@ pipeline {
     agent any
     stages {
 
-        stage('Setup parameters') {
-                    steps {
-                        script { 
-                            properties([
-                                parameters([
-                                    choice(
-                                        choices: ['eks', 'cf', 'ecs-cli'], 
-                                        name: 'cluster'
-                                    )
-                                ])
-                            ])
-                        }
-                    }
-                }
-
-
         stage ('scan') {
             steps {
                 withSonarQubeEnv('sonarqube-WC'){
@@ -70,7 +54,7 @@ pipeline {
                 timeout(time: 100, unit: 'SECONDS') 
             }
             steps{
-                catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') { 
+                catchError(buildResult: 'SUCCESS', stageResult: 'ABORTED') { 
                     script {
                         try {
                             results=ansibleTower(
