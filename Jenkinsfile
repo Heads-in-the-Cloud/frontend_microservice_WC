@@ -18,13 +18,13 @@ pipeline {
     agent any
     stages {
 
-        stage ('scan') {
-            steps {
-                withSonarQubeEnv('sonarqube-WC'){
-                sh "${scannerHome}/bin/sonar-scanner -D'sonar.projectKey=WC-frontend-microservice'"
-                }
-            }
-        }
+        // stage ('scan') {
+        //     steps {
+        //         withSonarQubeEnv('sonarqube-WC'){
+        //         sh "${scannerHome}/bin/sonar-scanner -D'sonar.projectKey=WC-frontend-microservice'"
+        //         }
+        //     }
+        // }
 
         stage('build') {
             steps {
