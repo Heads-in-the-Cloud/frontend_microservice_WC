@@ -24,6 +24,7 @@ HOST_DOMAIN=os.getenv('HOST_DOMAIN')
 
 
 @app.route('/')
+@app.route('/health')
 @app.route('/lms/health', methods = ['GET'])
 def health_public():
     return 'frontend'
