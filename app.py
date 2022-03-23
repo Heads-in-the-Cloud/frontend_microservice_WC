@@ -23,10 +23,7 @@ TRAVELER_ROLE=os.getenv('TRAVELER_ROLE')
 HOST_DOMAIN=os.getenv('HOST_DOMAIN')
 
 
-@app.route('/health', methods = ['GET'])
-def health():
-    return 'health'
-
+@app.route('/')
 @app.route('/lms/health', methods = ['GET'])
 def health_public():
     return 'frontend'
