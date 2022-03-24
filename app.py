@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, make_response, redirect, url_for, flash
 from flask_jwt_extended.view_decorators import verify_jwt_in_request
+from sympy import true
 from forms import *
 import logging, os, requests
 from dotenv import load_dotenv
@@ -76,7 +77,11 @@ def register():
 @app.route('/lms/home', methods = ['GET'])
 @app.route('/lms/routes', methods = ['GET'])
 def routes():
-    logged_in = verify_jwt_in_request(optional=True)
+    logged_in = True
+    try:
+        verify_jwt_in_request(optional=True, fresh=True)
+    except:
+        logged_in = False
     routes = requests.get(HOST_DOMAIN+'/airline/read/route', cookies=request.cookies if logged_in else None).json()
     return render_template('routes.html', title='Routes', routes=routes, logged_in=logged_in)
 
