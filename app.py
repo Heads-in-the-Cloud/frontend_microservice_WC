@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, make_response, redirect, url_for, flash
 from flask_jwt_extended.view_decorators import verify_jwt_in_request
-from sympy import true
 from forms import *
 import logging, os, requests
 from dotenv import load_dotenv
