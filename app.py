@@ -19,6 +19,7 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config["JWT_COOKIE_SECURE"]                         = False
 app.config["JWT_TOKEN_LOCATION"]                        = ["cookies"]
 app.config["JWT_COOKIE_CSRF_PROTECT"]                   = False
+app.config["PROPAGATE_EXCEPTIONS"]                      = True
 
 TRAVELER_ROLE=os.getenv('TRAVELER_ROLE')
 HOST_DOMAIN=os.getenv('HOST_DOMAIN')
