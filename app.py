@@ -19,7 +19,6 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config["JWT_COOKIE_SECURE"]                         = False
 app.config["JWT_TOKEN_LOCATION"]                        = ["cookies"]
 app.config["JWT_COOKIE_CSRF_PROTECT"]                   = False
-app.config["PROPAGATE_EXCEPTIONS"]                      = True
 
 TRAVELER_ROLE=os.getenv('TRAVELER_ROLE')
 HOST_DOMAIN=os.getenv('HOST_DOMAIN')
@@ -43,7 +42,6 @@ def login():
     #facilitate a login action if the request is of POST
     if form.validate_on_submit():
         response = requests.post(HOST_DOMAIN+'/login', json=request.form.to_dict())
-        logging.info(response)
         if response.status_code == 401:
             flash('Invalid credentials!', 'danger')
             return render_template('login.html', title='Login', form=form)
