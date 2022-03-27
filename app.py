@@ -22,7 +22,7 @@ app.config["JWT_COOKIE_CSRF_PROTECT"]                   = False
 TRAVELER_ROLE=os.getenv('TRAVELER_ROLE')
 HOST_DOMAIN=os.getenv('HOST_DOMAIN')
 
-
+@app.route('/health')
 @app.route('/lms/health', methods = ['GET'])
 def health_public():
     return 'frontend'

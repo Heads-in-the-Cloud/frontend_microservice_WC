@@ -4,9 +4,9 @@ pipeline {
         service_name            = "FrontendService"
         task_def_name           = "frontend-task-WC"
         image_label             = "${FRONTEND_REPO_WC}"
-        git_commit_hash         ="${sh(returnStdout: true, script: 'git rev-parse HEAD')}"
+        git_commit_hash         ="${sh(returnStdout: true, script: 'git rev-parse --short=8 HEAD').trim()}"
         image                   = ""
-        repository              = "http://${ORG_ACCOUNT_NUM}.dkr.ecr.us-west-2.amazonaws.com/${image_label}"
+        repository              = "${ORG_ACCOUNT_NUM}.dkr.ecr.${REGION_WC}.amazonaws.com/${image_label}"
         latest                  = "${FRONTEND_REPO_WC}:latest"
         scannerHome             = tool "${SonarQubeScanner}";
         built                   = false
@@ -43,9 +43,13 @@ pipeline {
         stage('push to registry') {
             steps {
                 script {
-                    docker.withRegistry(repository, "ecr:${region}:wc-ecr-access") {
-                        image.push('latest')
-                    }        
+                    sh "echo $git_commit_hash"
+                    sh 'aws ecr get-login-password --region ${REGION_WC} | docker login --username AWS --password-stdin ${ORG_ACCOUNT_NUM}.dkr.ecr.${REGION_WC}.amazonaws.com'
+
+                    sh "docker tag ${image_label} ${repository}:${git_commit_hash}"
+                    sh "docker tag ${image_label} ${repository}:latest"
+                    sh "docker push ${repository}:${git_commit_hash}"
+                    sh "docker push ${repository}:latest"   
                 }
             }
         }
@@ -87,8 +91,9 @@ pipeline {
         cleanup {
             script {
                 if(built) {
-                    sh "docker rmi $image_label"
-                }
+                    sh "docker rmi ${repository}:${git_commit_hash}"
+                    sh "docker rmi ${repository}:latest"
+                    sh "docker rmi ${image_label}"                }
             }
         }
     }
