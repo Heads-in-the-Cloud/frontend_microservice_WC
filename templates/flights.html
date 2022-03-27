@@ -41,13 +41,13 @@
 
 {% for flight in route.flights %}
 
-<table class="table table-striped">
+<table class="table table-striped" aria-describedby="table for flights">
     <tr>
-      <th>Flight No.</th>
-      <th>Airplane No.</th>
-      <th>Departure Time</th>
-      <th>Reserved Seats</th>
-      <th>Seat Price</th>
+      <th id="flight">Flight No.</th>
+      <th id="airplane">Airplane No.</th>
+      <th id="departure">Departure Time</th>
+      <th id="seats">Reserved Seats</th>
+      <th id="seats_price">Seat Price</th>
       <th></th>
     </tr>
     <td>{{flight.id}}</td>
