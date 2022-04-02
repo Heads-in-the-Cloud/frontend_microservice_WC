@@ -14,7 +14,7 @@ pipeline {
         microservice            = "frontend"
         ART_REPO_NAME           = credentials("WC_ART_REPO")
         ART_REPO_LOGIN          = credentials("WC_ARTIFACTORY_LOGIN")
-        ART_REPO_LOC            = "${WC_ART_REPO}/docker/${microservice}-api"
+        ART_REPO_LOC            = "${ART_REPO_NAME}/docker/${microservice}-api"
 
     }
 
@@ -67,8 +67,8 @@ pipeline {
                 sh "docker tag ${image_label}:latest ${ART_REPO_LOC}:latest"
                 sh "docker tag ${image_label}:latest ${ART_REPO_LOC}:${git_commit_hash}"
 
-                sh "docker push ${image_label}:latest ${ART_REPO_LOC}:latest"
-                sh "docker push ${image_label}:latest ${ART_REPO_LOC}:${git_commit_hash}"
+                sh "docker push ${ART_REPO_LOC}:latest"
+                sh "docker push ${ART_REPO_LOC}:${git_commit_hash}"
             }
         }
         stage('Update EKS via Ansible Tower'){
