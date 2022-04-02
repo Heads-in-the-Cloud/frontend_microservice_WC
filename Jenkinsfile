@@ -66,6 +66,9 @@ pipeline {
                 sh "echo ${ART_REPO_LOGIN_PSW} | docker login ${ART_REPO_NAME} --username ${ART_REPO_LOGIN_USR} --password-stdin"
                 sh "docker tag ${image_label}:latest ${ART_REPO_LOC}:latest"
                 sh "docker tag ${image_label}:latest ${ART_REPO_LOC}:${git_commit_hash}"
+
+                sh "docker push ${image_label}:latest ${ART_REPO_LOC}:latest"
+                sh "docker push ${image_label}:latest ${ART_REPO_LOC}:${git_commit_hash}"
             }
         }
         stage('Update EKS via Ansible Tower'){
