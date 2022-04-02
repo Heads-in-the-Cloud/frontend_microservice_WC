@@ -12,6 +12,9 @@ pipeline {
         built                   = false
         environment             = "dev"
         microservice            = "frontend"
+        ART_REPO_NAME           = credentials("WC_ART_REPO")
+        ART_REPO_LOGIN          = credentials("WC_ARTIFACTORY_LOGIN")
+        ART_REPO_LOC            = "${WC_ART_REPO}/docker/${microservice}-api"
 
     }
 
@@ -44,7 +47,7 @@ pipeline {
                 }
             }
         }
-        stage('push to registry') {
+        stage('push to ECR') {
             steps {
                 script {
                     sh "echo $git_commit_hash"
@@ -55,6 +58,14 @@ pipeline {
                     sh "docker push ${repository}:${git_commit_hash}"
                     sh "docker push ${repository}:latest"   
                 }
+            }
+        }
+        stage('push to Jfrog Artifactory') {
+            steps {
+                echo 'logging in via docker login'
+                sh "echo ${ART_REPO_LOGIN_PSW} | docker login ${ART_REPO_NAME} --username ${ART_REPO_LOGIN_USR} --password-stdin"
+                sh "docker tag ${image_label}:latest ${ART_REPO_LOC}:latest"
+                sh "docker tag ${image_label}:latest ${ART_REPO_LOC}:${git_commit_hash}"
             }
         }
         stage('Update EKS via Ansible Tower'){
@@ -97,7 +108,10 @@ pipeline {
                 if(built) {
                     sh "docker rmi ${repository}:${git_commit_hash}"
                     sh "docker rmi ${repository}:latest"
-                    sh "docker rmi ${image_label}"                }
+                    sh "docker rmi ${ART_REPO_LOC}:latest"
+                    sh "docker rmi ${ART_REPO_LOC}:${git_commit_hash}"
+                    sh "docker rmi ${image_label}"                
+                    }
             }
         }
     }
