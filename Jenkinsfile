@@ -84,7 +84,7 @@ pipeline {
                                 jobTemplate: "EKS-update-$microservice-$environment",
                                 extraVars: '''
                                 CLUSTER_NAME: "$CLUSTER_NAME_WC"
-                                REGION: "$region"
+                                REGION: "$REGION_WC"
                                 ''',
                                 verbose: true)
                         }
