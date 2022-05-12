@@ -21,17 +21,17 @@ pipeline {
     agent any
     stages {
 
-        stage ('scan') {
-            steps {
-                withSonarQubeEnv('sonarqube-WC'){
-                sh "${scannerHome}/bin/sonar-scanner -D'sonar.projectKey=WC-frontend-microservice'"
-                }
-                timeout(time: 5, unit: 'MINUTES') {
-                    sleep(10)
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
+        // stage ('scan') {
+        //     steps {
+        //         withSonarQubeEnv('sonarqube-WC'){
+        //         sh "${scannerHome}/bin/sonar-scanner -D'sonar.projectKey=WC-frontend-microservice'"
+        //         }
+        //         timeout(time: 5, unit: 'MINUTES') {
+        //             sleep(10)
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        // }
 
         stage('build') {
             steps {
@@ -60,17 +60,17 @@ pipeline {
                 }
             }
         }
-        stage('push to Jfrog Artifactory') {
-            steps {
-                echo 'logging in via docker login'
-                sh "echo ${ART_REPO_LOGIN_PSW} | docker login ${ART_REPO_NAME} --username ${ART_REPO_LOGIN_USR} --password-stdin"
-                sh "docker tag ${image_label}:latest ${ART_REPO_LOC}:latest"
-                sh "docker tag ${image_label}:latest ${ART_REPO_LOC}:${git_commit_hash}"
+        // stage('push to Jfrog Artifactory') {
+        //     steps {
+        //         echo 'logging in via docker login'
+        //         sh "echo ${ART_REPO_LOGIN_PSW} | docker login ${ART_REPO_NAME} --username ${ART_REPO_LOGIN_USR} --password-stdin"
+        //         sh "docker tag ${image_label}:latest ${ART_REPO_LOC}:latest"
+        //         sh "docker tag ${image_label}:latest ${ART_REPO_LOC}:${git_commit_hash}"
 
-                sh "docker push ${ART_REPO_LOC}:latest"
-                sh "docker push ${ART_REPO_LOC}:${git_commit_hash}"
-            }
-        }
+        //         sh "docker push ${ART_REPO_LOC}:latest"
+        //         sh "docker push ${ART_REPO_LOC}:${git_commit_hash}"
+        //     }
+        // }
         stage('Update EKS via Ansible Tower'){
             options {
                 timeout(time: 60, unit: 'SECONDS') 
@@ -111,8 +111,8 @@ pipeline {
                 if(built) {
                     sh "docker rmi ${repository}:${git_commit_hash}"
                     sh "docker rmi ${repository}:latest"
-                    sh "docker rmi ${ART_REPO_LOC}:latest"
-                    sh "docker rmi ${ART_REPO_LOC}:${git_commit_hash}"
+                    // sh "docker rmi ${ART_REPO_LOC}:latest"
+                    // sh "docker rmi ${ART_REPO_LOC}:${git_commit_hash}"
                     sh "docker rmi ${image_label}"                
                     }
             }
